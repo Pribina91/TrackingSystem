@@ -169,6 +169,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\VisitorCardsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -253,6 +254,11 @@
     <Content Include="Views\Attendance\Create.cshtml" />
     <Content Include="Views\Attendance\Details.cshtml" />
     <Content Include="Views\Attendance\Index.cshtml" />
+    <Content Include="Views\VisitorCards\Create.cshtml" />
+    <Content Include="Views\VisitorCards\Delete.cshtml" />
+    <Content Include="Views\VisitorCards\Details.cshtml" />
+    <Content Include="Views\VisitorCards\Edit.cshtml" />
+    <Content Include="Views\VisitorCards\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

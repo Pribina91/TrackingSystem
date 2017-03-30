@@ -37,9 +37,16 @@ namespace TrackingSystem.Controllers
         }
 
         // GET: Attendance/Create
-        public ActionResult Create()
+        public ActionResult CheckIn()
         {
-            ViewBag.CardId = new SelectList(db.VisitorCard, "CardId", "VisitorName");
+            ViewBag.CardId = new SelectList(db.VisitorCard.Where(vc => vc.Active && vc.Attendance.All(a => a.CheckOut.HasValue)), "CardId", "VisitorName");
+            return View();
+        }
+
+        // GET: Attendance/Create
+        public ActionResult CheckOut()
+        {
+            ViewBag.CardId = new SelectList(db.VisitorCard.Where(vc => vc.Active && vc.Attendance.Any(a => !a.CheckOut.HasValue)), "CardId", "VisitorName");
             return View();
         }
 
@@ -48,11 +55,49 @@ namespace TrackingSystem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AttendanceId,CardId,CheckIn,CheckOut")] Attendance attendance)
+        public ActionResult CheckIn([Bind(Include = "CardId")] Attendance attendance)
         {
             if (ModelState.IsValid)
             {
+                if (db.Attendance.Any(a => a.CardId == attendance.CardId && !a.CheckOut.HasValue))
+                {
+                        ModelState.AddModelError(nameof(attendance.CardId), "Visitor is already checked in");
+                        return View(attendance);                    
+                }
+
+                attendance.CheckIn = DateTime.Now;                
                 db.Attendance.Add(attendance);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.CardId = new SelectList(db.VisitorCard, "CardId", "VisitorName", attendance.CardId);
+            return View(attendance);
+        }
+        // POST: Attendance/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOut([Bind(Include = "CardId")] Attendance attendance)
+        {
+            if (ModelState.IsValid)
+            {
+                if (db.Attendance.All(a => a.CardId == attendance.CardId && a.CheckOut.HasValue))
+                {
+                    ModelState.AddModelError(nameof(attendance.CardId), "Visitor is not checked in");
+                    return View(attendance);
+                }
+
+                var dbValue = db.Attendance.SingleOrDefault(a => a.CardId == attendance.CardId && !a.CheckOut.HasValue);
+                if (dbValue == null)
+                {
+                    ModelState.AddModelError(nameof(attendance.CardId), "No checked in attendance");
+                    return View(attendance);
+                }
+
+                dbValue.CheckOut = DateTime.Now;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

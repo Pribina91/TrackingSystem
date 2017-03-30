@@ -169,13 +169,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\VisitorCardsController.cs" />
+    <Compile Include="Controllers\VisitorCardController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Attendance.cs">
       <DependentUpon>TrackingSystemEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Attendance_Partial.cs" />
     <Compile Include="Models\C__RefactorLog.cs">
       <DependentUpon>TrackingSystemEntities.tt</DependentUpon>
     </Compile>
@@ -251,14 +252,15 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Attendance\Create.cshtml" />
+    <Content Include="Views\Attendance\CheckIn.cshtml" />
     <Content Include="Views\Attendance\Details.cshtml" />
     <Content Include="Views\Attendance\Index.cshtml" />
-    <Content Include="Views\VisitorCards\Create.cshtml" />
-    <Content Include="Views\VisitorCards\Delete.cshtml" />
-    <Content Include="Views\VisitorCards\Details.cshtml" />
-    <Content Include="Views\VisitorCards\Edit.cshtml" />
-    <Content Include="Views\VisitorCards\Index.cshtml" />
+    <Content Include="Views\VisitorCard\Create.cshtml" />
+    <Content Include="Views\VisitorCard\Delete.cshtml" />
+    <Content Include="Views\VisitorCard\Details.cshtml" />
+    <Content Include="Views\VisitorCard\Edit.cshtml" />
+    <Content Include="Views\VisitorCard\Index.cshtml" />
+    <Content Include="Views\Attendance\CheckOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,7 +10,7 @@ using TrackingSystem.Models;
 
 namespace TrackingSystem.Controllers
 {
-    public class VisitorCardsController : Controller
+    public class VisitorCardController : Controller
     {
         private TrackingSystemEntities db = new TrackingSystemEntities();
 
@@ -50,6 +50,30 @@ namespace TrackingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(visitorCard.VisitorName)
+                    || string.IsNullOrEmpty(visitorCard.VisitorName.Trim()))
+                {
+                    ModelState.AddModelError(nameof(visitorCard.VisitorName), "Visitor name is required.");
+                    return View(visitorCard);
+                }
+
+                visitorCard.VisitorName = visitorCard.VisitorName.Trim();
+
+                if (db.VisitorCard
+                    .Any(
+                        vc =>
+                            visitorCard.Active
+                            && vc.Active
+                            && string.Compare(
+                                vc.VisitorName,
+                                visitorCard.VisitorName,
+                                StringComparison.InvariantCultureIgnoreCase) == 0)
+                )
+                {
+                    ModelState.AddModelError(nameof(visitorCard.VisitorName), "Visitor with this name already has a card");
+                    return View(visitorCard);
+                }
+
                 db.VisitorCard.Add(visitorCard);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -73,7 +97,7 @@ namespace TrackingSystem.Controllers
             return View(visitorCard);
         }
 
-        // POST: VisitorCards/Edit/5
+        //POST: VisitorCards/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -89,20 +113,20 @@ namespace TrackingSystem.Controllers
             return View(visitorCard);
         }
 
-        // GET: VisitorCards/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VisitorCard visitorCard = db.VisitorCard.Find(id);
-            if (visitorCard == null)
-            {
-                return HttpNotFound();
-            }
-            return View(visitorCard);
-        }
+        //// GET: VisitorCards/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    VisitorCard visitorCard = db.VisitorCard.Find(id);
+        //    if (visitorCard == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(visitorCard);
+        //}
 
         // POST: VisitorCards/Delete/5
         [HttpPost, ActionName("Delete")]

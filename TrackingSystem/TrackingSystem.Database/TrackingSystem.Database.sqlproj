@@ -59,11 +59,12 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="Tables\dbo" />
-    <Folder Include="Seed" />
+    <Folder Include="Init" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\dbo\VisitorCard.sql" />
     <Build Include="Tables\dbo\Attendance.sql" />
+    <Build Include="Init\InitSql.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="TrackingSystem.Database.refactorlog" />

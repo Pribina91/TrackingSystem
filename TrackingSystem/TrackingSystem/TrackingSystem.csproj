@@ -256,9 +256,7 @@
     <Content Include="Views\Attendance\Details.cshtml" />
     <Content Include="Views\Attendance\Index.cshtml" />
     <Content Include="Views\VisitorCard\Create.cshtml" />
-    <Content Include="Views\VisitorCard\Delete.cshtml" />
     <Content Include="Views\VisitorCard\Details.cshtml" />
-    <Content Include="Views\VisitorCard\Edit.cshtml" />
     <Content Include="Views\VisitorCard\Index.cshtml" />
     <Content Include="Views\Attendance\CheckOut.cshtml" />
   </ItemGroup>

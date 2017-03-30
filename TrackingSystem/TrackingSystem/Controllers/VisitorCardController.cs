@@ -76,67 +76,43 @@ namespace TrackingSystem.Controllers
 
                 db.VisitorCard.Add(visitorCard);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return View("Details", visitorCard);
             }
 
             return View(visitorCard);
         }
 
-        // GET: VisitorCards/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            VisitorCard visitorCard = db.VisitorCard.Find(id);
-            if (visitorCard == null)
-            {
-                return HttpNotFound();
-            }
-            return View(visitorCard);
-        }
-
-        //POST: VisitorCards/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CardId,Active,VisitorName")] VisitorCard visitorCard)
+        //POST: VisitorCards/Deactivate/5
+        [HttpGet]
+        public ActionResult Deactivate(int? id)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(visitorCard).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var card = db.VisitorCard.SingleOrDefault(vc => vc.CardId == id);
+                if (card == null)
+                {
+                    ModelState.AddModelError(nameof(id), "Card doesnt exists");
+                    return View("Index");
+                }
+
+                if (!card.Active)
+                {
+                    ModelState.AddModelError(nameof(card.Active), "Card is not active");
+                }
+                else if (card.Attendance.Any(a => !a.CheckOut.HasValue))
+                {
+                    ModelState.AddModelError(nameof(card.Active), "Card has one or more checked in visits");
+                }
+                else
+                {
+                    card.Active = false;
+                    db.SaveChanges();
+                }
+
+                return View("Details", card);
             }
-            return View(visitorCard);
-        }
 
-        //// GET: VisitorCards/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    VisitorCard visitorCard = db.VisitorCard.Find(id);
-        //    if (visitorCard == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(visitorCard);
-        //}
-
-        // POST: VisitorCards/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            VisitorCard visitorCard = db.VisitorCard.Find(id);
-            db.VisitorCard.Remove(visitorCard);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
         protected override void Dispose(bool disposing)
